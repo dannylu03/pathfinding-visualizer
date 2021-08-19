@@ -160,8 +160,8 @@ const PathfindingVisualizer = () => {
 
   return (
     <Fragment>
-      {/* <Navbar onClick={visualizePath} /> */}
-      <button onClick={visualizeAstar}>Visualize Algorithm</button>
+      <Navbar astarHandler={visualizeAstar} />
+      {/* <button onClick={visualizeAstar}>Visualize Algorithm</button> */}
       <div className="grid">{gridWithNode}</div>
     </Fragment>
   );
