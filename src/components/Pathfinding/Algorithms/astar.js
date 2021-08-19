@@ -26,7 +26,8 @@ const astar = (startNode, endNode) => {
         path.push(temp.previousNode);
         temp = temp.previousNode;
       }
-      return path;
+
+      return { path, visitedNodes };
     }
 
     // If current node isn't end node, remove it from openSet and push to closed set
@@ -36,7 +37,7 @@ const astar = (startNode, endNode) => {
     let neighbors = currentNode.neighbors;
     for (let i = 0; i < neighbors.length; i++) {
       let neighbor = neighbors[i];
-      if (!closedSet.includes(neighbor)) {
+      if (!closedSet.includes(neighbor) && !neighbor.isWall) {
         let tempG = currentNode.g + 1;
         let newPath = false;
 

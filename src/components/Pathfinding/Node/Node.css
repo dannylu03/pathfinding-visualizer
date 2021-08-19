@@ -11,6 +11,11 @@
 .node-finish {
   background-color: red;
 }
+
+.iswall {
+  background-color: black;
+}
+
 .node-visited {
   animation-name: visitedAnimation;
   animation-duration: 1.5s;

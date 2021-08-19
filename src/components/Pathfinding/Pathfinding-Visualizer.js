@@ -4,8 +4,8 @@ import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
 
-const numCols = 35;
-const numRows = 12;
+const numCols = 25;
+const numRows = 15;
 
 const NODE_START_ROW = 0;
 const NODE_START_COL = 0;
@@ -38,6 +38,8 @@ const PathfindingVisualizer = () => {
     const endNode = grid[NODE_END_ROW][NODE_END_COL];
 
     let path = astar(startNode, endNode);
+    startNode.isWall = false; // Start node will never be a wall
+    endNode.isWall = false;
     setPath(path.path);
     setVisitedNodes(path.visitedNodes);
   };
@@ -71,6 +73,12 @@ const PathfindingVisualizer = () => {
     this.h = 0; // Estimated movement cost from given node and end node
     this.neighbors = [];
     this.previousNode = undefined;
+    this.isWall = false;
+
+    // 20% of points are walls
+    if (Math.random(1) < 0.2) {
+      this.isWall = true;
+    }
 
     // Adds neighbors to specific node instances
     this.addneighbors = function (grid) {
@@ -105,7 +113,7 @@ const PathfindingVisualizer = () => {
         return (
           <div key={rowIdx} className="row">
             {row.map((col, colIdx) => {
-              const { isStart, isFinish } = col;
+              const { isStart, isFinish, isWall } = col;
               return (
                 <Node
                   key={colIdx}
@@ -113,6 +121,7 @@ const PathfindingVisualizer = () => {
                   isFinish={isFinish}
                   row={rowIdx}
                   col={colIdx}
+                  isWall={isWall}
                 />
               );
             })}
@@ -140,14 +149,15 @@ const PathfindingVisualizer = () => {
           visualizeShortestPath(path);
         }, 20 * i);
       } else {
-        const node = visitedNodes[i];
-        document.getElementById(`node-${node.x}-${node.y}`).className =
-          "node node-visited";
+        setTimeout(() => {
+          const node = visitedNodes[i];
+          document.getElementById(`node-${node.x}-${node.y}`).className =
+            "node node-visited";
+        }, 20 * i);
       }
     }
   };
 
-  console.log(path);
   return (
     <Fragment>
       {/* <Navbar onClick={visualizePath} /> */}
