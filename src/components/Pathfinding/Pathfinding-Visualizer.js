@@ -14,6 +14,8 @@ const NODE_END_COL = numCols - 1;
 
 const PathfindingVisualizer = () => {
   const [grid, setGrid] = useState([]);
+  const [path, setPath] = useState([]);
+  const [visitedNodes, setVisitedNodes] = useState([]);
 
   useEffect(() => {
     initializeGrid();
@@ -23,15 +25,21 @@ const PathfindingVisualizer = () => {
   const initializeGrid = () => {
     const grid = new Array(numRows);
 
-    for (let i = 0; i < numCols; i++) {
+    for (let i = 0; i < numRows; i++) {
       grid[i] = new Array(numCols);
     }
 
     createPoint(grid);
     setGrid(grid);
 
+    addNeighbors(grid);
+
     const startNode = grid[NODE_START_ROW][NODE_START_COL];
     const endNode = grid[NODE_END_ROW][NODE_END_COL];
+
+    let path = astar(startNode, endNode);
+    setPath(path.path);
+    setVisitedNodes(path.visitedNodes);
   };
 
   // Creates the nodes
@@ -65,7 +73,7 @@ const PathfindingVisualizer = () => {
     this.previousNode = undefined;
 
     // Adds neighbors to specific node instances
-    this.addNeighbors = function (grid) {
+    this.addneighbors = function (grid) {
       // Checks for the boundaries of the grid, left, right, bottom, top
       // Adds left node as a neighbor
       if (this.x > 0) {
@@ -114,9 +122,36 @@ const PathfindingVisualizer = () => {
     </div>
   );
 
+  // Animates shortest path
+  const visualizeShortestPath = (shortestPath) => {
+    for (let i = 0; i < shortestPath.length; i++) {
+      setTimeout(() => {
+        const node = shortestPath[i];
+        document.getElementById(`node-${node.x}-${node.y}`).className =
+          "node node-shortest-path";
+      }, 10 * i);
+    }
+  };
+
+  const visualizeAstar = () => {
+    for (let i = 0; i <= visitedNodes.length; i++) {
+      if (i === visitedNodes.length) {
+        setTimeout(() => {
+          visualizeShortestPath(path);
+        }, 20 * i);
+      } else {
+        const node = visitedNodes[i];
+        document.getElementById(`node-${node.x}-${node.y}`).className =
+          "node node-visited";
+      }
+    }
+  };
+
+  console.log(path);
   return (
     <Fragment>
-      <Navbar />
+      {/* <Navbar onClick={visualizePath} /> */}
+      <button onClick={visualizeAstar}>Visualize Algorithm</button>
       <div className="grid">{gridWithNode}</div>
     </Fragment>
   );
