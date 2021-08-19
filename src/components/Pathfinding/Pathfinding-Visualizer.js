@@ -4,8 +4,8 @@ import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
 
-const numCols = 25;
-const numRows = 15;
+const numCols = 35;
+const numRows = 20;
 
 const NODE_START_ROW = 0;
 const NODE_START_COL = 0;
