@@ -58,7 +58,9 @@ const Navbar = (props) => {
           </li>
 
           <li className="nav-item">
-            <div className="nav-links">Clear Grid</div>
+            <div className="nav-links">
+              <button onClick={props.clearGridHandler}>Clear Grid</button>
+            </div>
           </li>
         </ul>
         {/* <Button /> */}

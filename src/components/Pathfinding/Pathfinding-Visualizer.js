@@ -21,6 +21,22 @@ const PathfindingVisualizer = () => {
     initializeGrid();
   }, []);
 
+  const clearGrid = () => {
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        if (
+          !(
+            (row === NODE_START_ROW && col === NODE_START_COL) ||
+            (row === NODE_END_ROW && col === NODE_END_COL)
+          )
+        ) {
+          document.getElementById(`node-${row}-${col}`).className = "node";
+        }
+      }
+    }
+    initializeGrid();
+  };
+
   // Creates the grid
   const initializeGrid = () => {
     const grid = new Array(numRows);
@@ -156,11 +172,12 @@ const PathfindingVisualizer = () => {
         }, 20 * i);
       }
     }
+    // clearPath();
   };
 
   return (
     <Fragment>
-      <Navbar astarHandler={visualizeAstar} />
+      <Navbar astarHandler={visualizeAstar} clearGridHandler={clearGrid} />
       {/* <button onClick={visualizeAstar}>Visualize Algorithm</button> */}
       <div className="grid">{gridWithNode}</div>
     </Fragment>
