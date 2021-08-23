@@ -4,6 +4,8 @@ import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
 
+// Constants
+
 const numCols = 35;
 const numRows = 20;
 
@@ -16,6 +18,36 @@ const PathfindingVisualizer = () => {
   const [grid, setGrid] = useState([]);
   const [path, setPath] = useState([]);
   const [visitedNodes, setVisitedNodes] = useState([]);
+  const [mousePressed, setMousePressed] = useState(false);
+
+  const getNewGridWithWalls = (grid, row, col) => {
+    let newGrid = grid.slice();
+    let node = grid[row][col];
+    let newNode = {
+      ...node,
+      isWall: !node.isWall,
+    };
+    newGrid[row][col] = newNode;
+    return newGrid;
+  };
+
+  const mouseDownHandler = (row, col) => {
+    const newGrid = getNewGridWithWalls(grid, row, col);
+    setGrid(newGrid);
+    setMousePressed(true);
+  };
+
+  const mouseEnterHandler = (row, col) => {
+    if (mousePressed) {
+      const newGrid = getNewGridWithWalls(grid, row, col);
+      setGrid(newGrid);
+      setMousePressed(true);
+    }
+  };
+
+  const mouseUpHandler = () => {
+    setMousePressed(false);
+  };
 
   useEffect(() => {
     initializeGrid();
@@ -138,6 +170,9 @@ const PathfindingVisualizer = () => {
                   row={rowIdx}
                   col={colIdx}
                   isWall={isWall}
+                  onMouseDown={(row, col) => mouseDownHandler(row, col)}
+                  onMouseEnter={(row, col) => mouseEnterHandler(row, col)}
+                  onMouseUp={() => mouseUpHandler()}
                 />
               );
             })}
