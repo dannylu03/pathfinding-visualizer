@@ -3,7 +3,6 @@ import Node from "./Node/Node";
 import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
-import { getNodesInShortestPathOrderAstar } from "./Algorithms/astar";
 // Constants
 
 const numCols = 35;
@@ -118,7 +117,7 @@ const PathfindingVisualizer = () => {
     this.g = 0; // Movement cost from start node to a given node
     this.h = 0; // Estimated movement cost from given node and end node
     this.neighbors = [];
-    this.previousNode = undefined;
+    this.previousNode = null;
     this.isWall = false;
     this.isVisited = false;
     this.isShortest = false;
@@ -187,42 +186,127 @@ const PathfindingVisualizer = () => {
   );
 
   // Animates shortest path
-  const visualizeShortestPath = (shortestPath) => {
-    console.log(path);
-    for (let i = 0; i < shortestPath.length; i++) {
-      setTimeout(() => {
-        const node = shortestPath[i];
-        document.getElementById(`node-${node.x}-${node.y}`).className =
-          "node node-shortest-path";
-      }, 10 * i);
+  // const visualizeShortestPath = (shortestPath) => {
+  //   console.log(path);
+  //   for (let i = 0; i < shortestPath.length; i++) {
+  //     setTimeout(() => {
+  //       const node = shortestPath[i];
+  //       document.getElementById(`node-${node.x}-${node.y}`).className =
+  //         "node node-shortest-path";
+  //     }, 10 * i);
+  //   }
+  // };
+  const updateNodesForRender = (
+    grid,
+    nodesInShortestPathOrder,
+    visitedNodesInOrder
+  ) => {
+    let newGrid = grid.slice();
+    for (let node of visitedNodesInOrder) {
+      if (
+        (node.x === NODE_START_ROW && node.y === NODE_START_COL) ||
+        (node.x === NODE_END_ROW && node.y === NODE_END_COL)
+      )
+        continue;
+      let newNode = {
+        ...node,
+        isVisited: true,
+      };
+      newGrid[node.x][node.y] = newNode;
+    }
+    for (let node of nodesInShortestPathOrder) {
+      if (node.x === NODE_END_ROW && node.y === NODE_END_COL) {
+        return newGrid;
+      }
+      let newNode = {
+        ...node,
+        isVisited: false,
+        isShortest: true,
+      };
+      newGrid[node.x][node.y] = newNode;
     }
   };
 
-  const visualizeAlgorithm = () => {
-    console.log(visitedNodes);
-    for (let i = 0; i <= visitedNodes.length; i++) {
-      if (i === visitedNodes.length) {
+  const visualizeShortestPath = (
+    nodesInsShortestPathOrder,
+    visitedNodesInOrder
+  ) => {
+    for (let i = 1; i < nodesInsShortestPathOrder.length - 1; i++) {
+      if (i === nodesInsShortestPathOrder.length - 1) {
         setTimeout(() => {
-          visualizeShortestPath(path);
-        }, 20 * i);
-      } else {
-        setTimeout(() => {
-          const node = visitedNodes[i];
-          document.getElementById(`node-${node.x}-${node.y}`).className =
-            "node node-visited";
-        }, 20 * i);
+          let newGrid = updateNodesForRender(
+            grid,
+            nodesInsShortestPathOrder,
+            visitedNodesInOrder
+          );
+          setGrid(newGrid);
+        }, i * 30);
+        return;
       }
+      let node = nodesInsShortestPathOrder[i];
+      setTimeout(() => {
+        document.getElementById(`node-${node.x}-${node.y}`).className =
+          "node node-shortest-path";
+      }, i * 30);
     }
   };
+  const visualizeAlgorithm = (
+    visitedNodesInOrder,
+    nodesInShortestPathOrder
+  ) => {
+    let newGrid = grid.slice();
+    for (let row of newGrid) {
+      for (let node of row) {
+        let newNode = {
+          ...node,
+          isVisited: false,
+        };
+        newGrid[node.x][node.y] = newNode;
+      }
+    }
+    setGrid(grid);
+    for (let i = 1; i <= visitedNodesInOrder.length; i++) {
+      let node = visitedNodesInOrder[i];
+      if (i === visitedNodesInOrder.length) {
+        setTimeout(() => {
+          visualizeShortestPath(nodesInShortestPathOrder, visitedNodesInOrder);
+        }, i * 10);
+        return;
+      }
+      setTimeout(() => {
+        //visited node
+        document.getElementById(`node-${node.x}-${node.y}`).className =
+          "node node-visited";
+      }, i * 10);
+    }
+  };
+
+  // const visualizeAlgorithm = () => {
+  //   console.log(visitedNodes);
+  //   for (let i = 0; i <= visitedNodes.length; i++) {
+  //     if (i === visitedNodes.length) {
+  //       setTimeout(() => {
+  //         visualizeShortestPath(path);
+  //       }, 20 * i);
+  //     } else {
+  //       setTimeout(() => {
+  //         const node = visitedNodes[i];
+  //         document.getElementById(`node-${node.x}-${node.y}`).className =
+  //           "node node-visited";
+  //       }, 20 * i);
+  //     }
+  //   }
+  // };
 
   const visualizeAstar = () => {
     setTimeout(() => {
       const startNode = grid[NODE_START_ROW][NODE_START_COL];
       const endNode = grid[NODE_END_ROW][NODE_END_COL];
-      const visitedNodesInOrder = astar(grid, startNode, endNode);
-      const nodesInsShortestPathOrder =
-        getNodesInShortestPathOrderAstar(endNode);
-    });
+      let path = astar(startNode, endNode);
+      const visitedNodesInOrder = path.visitedNodes;
+      const nodesInShortestPathOrder = path.path;
+      visualizeAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    }, 10);
   };
 
   return (
