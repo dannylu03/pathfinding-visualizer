@@ -3,11 +3,11 @@ import Node from "./Node/Node";
 import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
-
+import { getNodesInShortestPathOrderAstar } from "./Algorithms/astar";
 // Constants
 
 const numCols = 35;
-const numRows = 20;
+const numRows = 15;
 
 const NODE_START_ROW = 0;
 const NODE_START_COL = 0;
@@ -19,6 +19,7 @@ const PathfindingVisualizer = () => {
   const [path, setPath] = useState([]);
   const [visitedNodes, setVisitedNodes] = useState([]);
   const [mousePressed, setMousePressed] = useState(false);
+  const [visualizingAlgorithm, setVisualizingAlgorithm] = useState(false);
 
   const getNewGridWithWalls = (grid, row, col) => {
     let newGrid = grid.slice();
@@ -71,7 +72,7 @@ const PathfindingVisualizer = () => {
 
   // Creates the grid
   const initializeGrid = () => {
-    const grid = new Array(numRows);
+    let grid = new Array(numRows);
 
     for (let i = 0; i < numRows; i++) {
       grid[i] = new Array(numCols);
@@ -85,11 +86,8 @@ const PathfindingVisualizer = () => {
     const startNode = grid[NODE_START_ROW][NODE_START_COL];
     const endNode = grid[NODE_END_ROW][NODE_END_COL];
 
-    let path = astar(startNode, endNode);
     startNode.isWall = false; // Start node will never be a wall
     endNode.isWall = false;
-    setPath(path.path);
-    setVisitedNodes(path.visitedNodes);
   };
 
   // Creates the nodes
@@ -122,6 +120,10 @@ const PathfindingVisualizer = () => {
     this.neighbors = [];
     this.previousNode = undefined;
     this.isWall = false;
+    this.isVisited = false;
+    this.isShortest = false;
+    this.distance = Infinity;
+    this.totalDistance = Infinity;
 
     // 20% of points are walls
     if (Math.random(1) < 0.2) {
@@ -161,12 +163,14 @@ const PathfindingVisualizer = () => {
         return (
           <div key={rowIdx} className="row">
             {row.map((col, colIdx) => {
-              const { isStart, isFinish, isWall } = col;
+              const { isStart, isFinish, isWall, isVisited, isShortest } = col;
               return (
                 <Node
                   key={colIdx}
                   isStart={isStart}
                   isFinish={isFinish}
+                  isVisited={isVisited}
+                  isShortest={isShortest}
                   row={rowIdx}
                   col={colIdx}
                   isWall={isWall}
@@ -184,6 +188,7 @@ const PathfindingVisualizer = () => {
 
   // Animates shortest path
   const visualizeShortestPath = (shortestPath) => {
+    console.log(path);
     for (let i = 0; i < shortestPath.length; i++) {
       setTimeout(() => {
         const node = shortestPath[i];
@@ -193,7 +198,8 @@ const PathfindingVisualizer = () => {
     }
   };
 
-  const visualizeAstar = () => {
+  const visualizeAlgorithm = () => {
+    console.log(visitedNodes);
     for (let i = 0; i <= visitedNodes.length; i++) {
       if (i === visitedNodes.length) {
         setTimeout(() => {
@@ -207,7 +213,16 @@ const PathfindingVisualizer = () => {
         }, 20 * i);
       }
     }
-    // clearPath();
+  };
+
+  const visualizeAstar = () => {
+    setTimeout(() => {
+      const startNode = grid[NODE_START_ROW][NODE_START_COL];
+      const endNode = grid[NODE_END_ROW][NODE_END_COL];
+      const visitedNodesInOrder = astar(grid, startNode, endNode);
+      const nodesInsShortestPathOrder =
+        getNodesInShortestPathOrderAstar(endNode);
+    });
   };
 
   return (

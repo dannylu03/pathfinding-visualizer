@@ -10,6 +10,8 @@ const Node = ({
   onMouseEnter,
   onMouseDown,
   onMouseUp,
+  isVisited,
+  isShortest,
 }) => {
   const classes = isStart
     ? "node-start"
@@ -17,6 +19,10 @@ const Node = ({
     ? "iswall"
     : isFinish
     ? "node-finish"
+    : isVisited
+    ? "node node-visited"
+    : isShortest
+    ? "node node-shortest-path"
     : "";
   return (
     <div
