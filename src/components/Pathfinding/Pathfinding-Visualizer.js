@@ -15,10 +15,7 @@ const NODE_END_COL = numCols - 1;
 
 const PathfindingVisualizer = () => {
   const [grid, setGrid] = useState([]);
-  const [path, setPath] = useState([]);
-  const [visitedNodes, setVisitedNodes] = useState([]);
   const [mousePressed, setMousePressed] = useState(false);
-  const [visualizingAlgorithm, setVisualizingAlgorithm] = useState(false);
 
   const getNewGridWithWalls = (grid, row, col) => {
     let newGrid = grid.slice();
@@ -185,17 +182,6 @@ const PathfindingVisualizer = () => {
     </div>
   );
 
-  // Animates shortest path
-  // const visualizeShortestPath = (shortestPath) => {
-  //   console.log(path);
-  //   for (let i = 0; i < shortestPath.length; i++) {
-  //     setTimeout(() => {
-  //       const node = shortestPath[i];
-  //       document.getElementById(`node-${node.x}-${node.y}`).className =
-  //         "node node-shortest-path";
-  //     }, 10 * i);
-  //   }
-  // };
   const updateNodesForRender = (
     grid,
     nodesInShortestPathOrder,
@@ -281,23 +267,6 @@ const PathfindingVisualizer = () => {
     }
   };
 
-  // const visualizeAlgorithm = () => {
-  //   console.log(visitedNodes);
-  //   for (let i = 0; i <= visitedNodes.length; i++) {
-  //     if (i === visitedNodes.length) {
-  //       setTimeout(() => {
-  //         visualizeShortestPath(path);
-  //       }, 20 * i);
-  //     } else {
-  //       setTimeout(() => {
-  //         const node = visitedNodes[i];
-  //         document.getElementById(`node-${node.x}-${node.y}`).className =
-  //           "node node-visited";
-  //       }, 20 * i);
-  //     }
-  //   }
-  // };
-
   const visualizeAstar = () => {
     setTimeout(() => {
       const startNode = grid[NODE_START_ROW][NODE_START_COL];
@@ -312,7 +281,6 @@ const PathfindingVisualizer = () => {
   return (
     <Fragment>
       <Navbar astarHandler={visualizeAstar} clearGridHandler={clearGrid} />
-      {/* <button onClick={visualizeAstar}>Visualize Algorithm</button> */}
       <div className="grid">{gridWithNode}</div>
     </Fragment>
   );

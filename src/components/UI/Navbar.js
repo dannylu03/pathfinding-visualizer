@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import Button from "./Button";
+import Button from "./Button";
 import "./Navbar.css";
 import Dropdown from "./Dropdown";
 
@@ -49,7 +49,10 @@ const Navbar = (props) => {
 
           <li className="nav-item">
             <div className="nav-links">
-              <button onClick={props.astarHandler}>Visualize Algorithm</button>
+              <Button
+                clickHandler={props.astarHandler}
+                text={"Visualize Algorithm"}
+              />
             </div>
           </li>
 
@@ -59,11 +62,13 @@ const Navbar = (props) => {
 
           <li className="nav-item">
             <div className="nav-links">
-              <button onClick={props.clearGridHandler}>Clear Grid</button>
+              <Button
+                clickHandler={props.clearGridHandler}
+                text={"Clear Grid"}
+              />
             </div>
           </li>
         </ul>
-        {/* <Button /> */}
       </nav>
     </>
   );
