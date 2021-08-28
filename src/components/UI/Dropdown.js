@@ -1,24 +1,40 @@
 import React, { useState } from "react";
-import { MenuItems } from "./MenuItems";
 import "./Dropdown.css";
 
-const Dropdown = () => {
+const Dropdown = (props) => {
+  const menuItems = [
+    {
+      title: "A*",
+      cName: "dropdown-link",
+    },
+    {
+      title: "Dijkstra",
+      cName: "dropdown-link",
+    },
+    {
+      title: "Breadth First Search",
+      cName: "dropdown-link",
+    },
+  ];
+
   const [click, setClick] = useState(false);
 
   const clickHandler = () => setClick(!click);
 
+  const algorithmHandler = (event) => {
+    props.algorithmHandler(event.target.innerText);
+  };
+
   return (
     <>
       <ul
-        onClick={clickHandler}
+        onClick={algorithmHandler}
         className={click ? "dropdown-menu clicked" : "dropdown-menu"}
       >
-        {MenuItems.map((item, index) => {
+        {menuItems.map((item, index) => {
           return (
             <li key={index}>
-              <div className={item.cName} onClick={() => setClick(false)}>
-                {item.title}
-              </div>
+              <div className={item.cName}>{item.title}</div>
             </li>
           );
         })}

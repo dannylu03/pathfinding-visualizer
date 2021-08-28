@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-// import Button from "./Button";
+import Button from "./Button";
 import "./Navbar.css";
 import Dropdown from "./Dropdown";
 
 const Navbar = (props) => {
   const [click, setClick] = useState(false);
   const [dropdown, setDropdown] = useState(false);
+  const [algorithm, setAlgorithm] = useState("Algorithm");
+
+  const algorithmHandler = (selectedAlgorithm) => {
+    setAlgorithm(selectedAlgorithm);
+    props.algorithmHandler(selectedAlgorithm);
+  };
 
   const clickHandler = () => {
     setClick(!click);
@@ -27,6 +33,10 @@ const Navbar = (props) => {
     }
   };
 
+  const visualizeAlgorithm = () => {
+    if (algorithm === "A*") props.astarHandler();
+  };
+
   return (
     <>
       <nav className="navbar">
@@ -41,15 +51,18 @@ const Navbar = (props) => {
             onMouseLeave={onMouseLeave}
           >
             <div className="nav-links">
-              Algorithms <i className="fas fa-caret-down" />
+              {algorithm} <i className="fas fa-caret-down" />
             </div>
 
-            {dropdown && <Dropdown />}
+            {dropdown && <Dropdown algorithmHandler={algorithmHandler} />}
           </li>
 
           <li className="nav-item">
             <div className="nav-links">
-              <button onClick={props.astarHandler}>Visualize Algorithm</button>
+              <Button
+                clickHandler={visualizeAlgorithm}
+                text={`Visualize ${algorithm}`}
+              />
             </div>
           </li>
 
@@ -58,10 +71,14 @@ const Navbar = (props) => {
           </li>
 
           <li className="nav-item">
-            <div className="nav-links">Clear Grid</div>
+            <div className="nav-links">
+              <Button
+                clickHandler={props.clearGridHandler}
+                text={"Clear Grid"}
+              />
+            </div>
           </li>
         </ul>
-        {/* <Button /> */}
       </nav>
     </>
   );
