@@ -3,6 +3,7 @@ import Node from "./Node/Node";
 import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
+import { getNodesInShortestPathOrderAstar } from "./Algorithms/astar";
 import breadthFirstSearch from "./Algorithms/breadthFirstSearch";
 import { getNodesInShortestPathOrderBFS } from "./Algorithms/breadthFirstSearch";
 // Constants
@@ -289,9 +290,10 @@ const PathfindingVisualizer = () => {
     setTimeout(() => {
       const startNode = grid[NODE_START_ROW][NODE_START_COL];
       const endNode = grid[NODE_END_ROW][NODE_END_COL];
-      let path = astar(startNode, endNode);
-      const visitedNodesInOrder = path.visitedNodes;
-      const nodesInShortestPathOrder = path.path;
+      const visitedNodesInOrder = astar(grid, startNode, endNode);
+      const nodesInShortestPathOrder =
+        getNodesInShortestPathOrderAstar(endNode);
+
       visualizeAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
     }, 10);
   };

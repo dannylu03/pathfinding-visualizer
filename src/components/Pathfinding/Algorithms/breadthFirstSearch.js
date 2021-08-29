@@ -29,7 +29,7 @@ const getUnvisitedNeighbors = (node, grid) => {
   if (y !== grid[0].length - 1) neighbors.push(grid[x][y + 1]);
   if (x !== grid.length - 1) neighbors.push(grid[x + 1][y]);
   if (y !== 0) neighbors.push(grid[x][y - 1]);
-  console.log(neighbors);
+
   return neighbors.filter((neighbor) => !neighbor.isVisited);
 };
 
