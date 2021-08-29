@@ -3,6 +3,8 @@ import Node from "./Node/Node";
 import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
 import astar from "./Algorithms/astar";
+import breadthFirstSearch from "./Algorithms/breadthFirstSearch";
+import { getNodesInShortestPathOrderBFS } from "./Algorithms/breadthFirstSearch";
 // Constants
 
 const numCols = 35;
@@ -79,13 +81,24 @@ const PathfindingVisualizer = () => {
       grid[i] = new Array(numCols);
     }
 
+    // Makes a node/point instance
     createPoint(grid);
     setGrid(grid);
 
+    // Add neighbors for all the nodes instances
     addNeighbors(grid);
 
     const startNode = grid[NODE_START_ROW][NODE_START_COL];
     const endNode = grid[NODE_END_ROW][NODE_END_COL];
+
+    // Makes sure the start and end node have right styling
+    if (startNode.className !== "node node-start") {
+      startNode.className = "node node-start";
+    }
+
+    if (endNode.className !== "node node-finish") {
+      endNode.className = "node node-finish";
+    }
 
     startNode.isWall = false; // Start node will never be a wall
     endNode.isWall = false;
@@ -283,10 +296,21 @@ const PathfindingVisualizer = () => {
     }, 10);
   };
 
+  const visualizeBFS = () => {
+    setTimeout(() => {
+      const startNode = grid[NODE_START_ROW][NODE_START_COL];
+      const endNode = grid[NODE_END_ROW][NODE_END_COL];
+      const visitedNodesInOrder = breadthFirstSearch(grid, startNode, endNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(endNode);
+      visualizeAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    }, 10);
+  };
+
   return (
     <Fragment>
       <Navbar
         astarHandler={visualizeAstar}
+        bfsHandler={visualizeBFS}
         clearGridHandler={clearGrid}
         algorithmHandler={algorithmHandler}
       />
