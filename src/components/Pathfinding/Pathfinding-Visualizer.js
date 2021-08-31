@@ -6,6 +6,8 @@ import astar from "./Algorithms/astar";
 import { getNodesInShortestPathOrderAstar } from "./Algorithms/astar";
 import breadthFirstSearch from "./Algorithms/breadthFirstSearch";
 import { getNodesInShortestPathOrderBFS } from "./Algorithms/breadthFirstSearch";
+import depthFirstSearch from "./Algorithms/depthFirstSearch";
+import { getNodesInShortestPathOrderDFS } from "./Algorithms/depthFirstSearch";
 // Constants
 
 const numCols = 35;
@@ -13,8 +15,8 @@ const numRows = 15;
 
 const NODE_START_ROW = 0;
 const NODE_START_COL = 0;
-const NODE_END_ROW = numRows - 1;
-const NODE_END_COL = numCols - 1;
+const NODE_END_ROW = numRows - 4;
+const NODE_END_COL = numCols - 4;
 
 const PathfindingVisualizer = () => {
   const [grid, setGrid] = useState([]);
@@ -139,11 +141,6 @@ const PathfindingVisualizer = () => {
     this.isShortest = false;
     this.distance = Infinity;
     this.totalDistance = Infinity;
-
-    // 20% of points are walls
-    if (Math.random(1) < 0.2) {
-      this.isWall = true;
-    }
 
     // Adds neighbors to specific node instances
     this.addneighbors = function (grid) {
@@ -272,12 +269,15 @@ const PathfindingVisualizer = () => {
     setGrid(grid);
     for (let i = 1; i <= visitedNodesInOrder.length; i++) {
       let node = visitedNodesInOrder[i];
+      // When we have visited all the nodes
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
           visualizeShortestPath(nodesInShortestPathOrder, visitedNodesInOrder);
         }, i * 10);
         return;
       }
+
+      // Otherwise mark the node as visited in css
       setTimeout(() => {
         //visited node
         document.getElementById(`node-${node.x}-${node.y}`).className =
@@ -308,11 +308,22 @@ const PathfindingVisualizer = () => {
     }, 10);
   };
 
+  const visualizeDFS = () => {
+    setTimeout(() => {
+      const startNode = grid[NODE_START_ROW][NODE_START_COL];
+      const endNode = grid[NODE_END_ROW][NODE_END_COL];
+      const visitedNodesInOrder = depthFirstSearch(grid, startNode, endNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrderDFS(endNode);
+      visualizeAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    }, 10);
+  };
+
   return (
     <Fragment>
       <Navbar
         astarHandler={visualizeAstar}
         bfsHandler={visualizeBFS}
+        dfsHandler={visualizeDFS}
         clearGridHandler={clearGrid}
         algorithmHandler={algorithmHandler}
       />

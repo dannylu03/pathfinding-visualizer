@@ -1,13 +1,15 @@
 const breadthFirstSearch = (grid, startNode, endNode) => {
-  let unvisitedNodes = [];
+  let unvisitedNodes = []; // queue
   let visitedNodesInOrder = [];
 
+  // Start node starts the queue
   unvisitedNodes.push(startNode);
   while (unvisitedNodes.length !== 0) {
     let closestNode = unvisitedNodes.shift();
-    if (closestNode.isWall) continue;
 
+    if (closestNode.isWall) continue;
     if (closestNode === endNode) return visitedNodesInOrder;
+
     visitedNodesInOrder.push(closestNode);
 
     closestNode.isVisited = true;
@@ -15,7 +17,7 @@ const breadthFirstSearch = (grid, startNode, endNode) => {
     for (let unvisitedNeighbor of unvisitedNeighbors) {
       unvisitedNeighbor.previousNode = closestNode;
       if (neighborNotInUnvisitedNodes(unvisitedNeighbor, unvisitedNodes)) {
-        unvisitedNodes.push(unvisitedNeighbor);
+        unvisitedNodes.push(unvisitedNeighbor); // Add to the queue
       }
     }
   }

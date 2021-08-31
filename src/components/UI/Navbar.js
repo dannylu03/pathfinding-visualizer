@@ -36,6 +36,7 @@ const Navbar = (props) => {
   const visualizeAlgorithm = () => {
     if (algorithm === "A*") props.astarHandler();
     if (algorithm === "Breadth First Search") props.bfsHandler();
+    if (algorithm === "Depth First Search") props.dfsHandler();
   };
 
   return (

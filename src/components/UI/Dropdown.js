@@ -15,6 +15,10 @@ const Dropdown = (props) => {
       title: "Breadth First Search",
       cName: "dropdown-link",
     },
+    {
+      title: "Depth First Search",
+      cName: "dropdown-link",
+    },
   ];
 
   const [click, setClick] = useState(false);
