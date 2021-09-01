@@ -37,6 +37,7 @@ const Navbar = (props) => {
     if (algorithm === "A*") props.astarHandler();
     if (algorithm === "Breadth First Search") props.bfsHandler();
     if (algorithm === "Depth First Search") props.dfsHandler();
+    if (algorithm === "Dijkstra") props.dijkstrasHandler();
   };
 
   return (

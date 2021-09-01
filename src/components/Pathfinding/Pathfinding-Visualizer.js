@@ -2,19 +2,21 @@ import React, { useState, useEffect, Fragment } from "react";
 import Node from "./Node/Node";
 import Navbar from "../UI/Navbar";
 import "./PathfindingVisualizer.css";
-import astar from "./Algorithms/astar";
-import { getNodesInShortestPathOrderAstar } from "./Algorithms/astar";
-import breadthFirstSearch from "./Algorithms/breadthFirstSearch";
-import { getNodesInShortestPathOrderBFS } from "./Algorithms/breadthFirstSearch";
-import depthFirstSearch from "./Algorithms/depthFirstSearch";
-import { getNodesInShortestPathOrderDFS } from "./Algorithms/depthFirstSearch";
+import astar from "../Algorithms/PathfindingAlgorithms/astar";
+import { getNodesInShortestPathOrderAstar } from "../Algorithms/PathfindingAlgorithms/astar";
+import breadthFirstSearch from "../Algorithms/PathfindingAlgorithms/breadthFirstSearch";
+import { getNodesInShortestPathOrderBFS } from "../Algorithms/PathfindingAlgorithms/breadthFirstSearch";
+import depthFirstSearch from "../Algorithms/PathfindingAlgorithms/depthFirstSearch";
+import { getNodesInShortestPathOrderDFS } from "../Algorithms/PathfindingAlgorithms/depthFirstSearch";
+import dijkstras from "../Algorithms/PathfindingAlgorithms/dijkstras";
+import { getNodesInShortestPathOrderDijkstra } from "../Algorithms/PathfindingAlgorithms/dijkstras";
 // Constants
 
 const numCols = 35;
 const numRows = 15;
 
-const NODE_START_ROW = 0;
-const NODE_START_COL = 0;
+const NODE_START_ROW = 4;
+const NODE_START_COL = 4;
 const NODE_END_ROW = numRows - 4;
 const NODE_END_COL = numCols - 4;
 
@@ -318,12 +320,24 @@ const PathfindingVisualizer = () => {
     }, 10);
   };
 
+  const visualizeDijkstras = () => {
+    setTimeout(() => {
+      const startNode = grid[NODE_START_ROW][NODE_START_COL];
+      const endNode = grid[NODE_END_ROW][NODE_END_COL];
+      const visitedNodesInOrder = dijkstras(grid, startNode, endNode);
+      const nodesInShortestPathOrder =
+        getNodesInShortestPathOrderDijkstra(endNode);
+      visualizeAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder);
+    }, 10);
+  };
+
   return (
     <Fragment>
       <Navbar
         astarHandler={visualizeAstar}
         bfsHandler={visualizeBFS}
         dfsHandler={visualizeDFS}
+        dijkstrasHandler={visualizeDijkstras}
         clearGridHandler={clearGrid}
         algorithmHandler={algorithmHandler}
       />
