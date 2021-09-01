@@ -1,3 +1,4 @@
+<h1>Pathfinding Visualizer </h1>
 <!-- TABLE OF CONTENTS -->
 <details open="open">
   <summary>Table of Contents</summary>
